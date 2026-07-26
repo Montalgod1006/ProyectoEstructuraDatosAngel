@@ -15,7 +15,7 @@ export const NavLink = ({ icon, text, active = false, to }: Props) => {
                 ${
                   active
                     ? " text-white"
-                    : "text-purple-200 hover:bg-purple-500"
+                    : "text-purple-200 hover:bg-blue-400"
                 }`}
     >
         {icon} <span>{text}</span>
