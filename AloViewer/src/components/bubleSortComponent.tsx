@@ -32,6 +32,8 @@ export const BubleSortComponent: React.FC = () => {
   const [array, setArray] = useState<number[]>(initialArray);
   const [sorting, setSorting] = useState(false);
   const [swapIndices, setSwapIndices] = useState<number[]>([]);
+  const [nFact, setNFact] = useState(0);
+  const [speedFact, setSpeedFact] = useState(100);
 
   async function bubbleSort() {
     setSorting(true);
@@ -42,7 +44,7 @@ export const BubleSortComponent: React.FC = () => {
             setSwapIndices([j, j+1]);
           [copy[j], copy[j + 1]] = [copy[j + 1], copy[j]];
           setArray([...copy]);
-          await new Promise((res) => setTimeout(res, 600)); 
+          await new Promise((res) => setTimeout(res, speedFact)); 
           setSwapIndices([]);
         }
       }
@@ -53,10 +55,34 @@ export const BubleSortComponent: React.FC = () => {
   function resetArray() {
     setArray(Array.from({ length: 9 }, () => Math.floor(Math.random() * 20) + 1));
   }
+  function addArray(){
+    setArray([...array, nFact])
+    setNFact(0)
+  }
 
   return (
     <div style={{ textAlign: "center", marginTop: "40px" }} className="justify-center">
       <Visualizer array={array} swapIndices={swapIndices} />
+      <div>
+        <input type="number" className="bg-white text-black" 
+              value={nFact} 
+              min={0} 
+              onChange={(e) => {
+              setNFact(Number(e.target.value));
+            }}/>
+
+        <button onClick={addArray} style={{ marginLeft: "10px" }} disabled={sorting}>
+          Agregar al Array
+        </button>
+          
+        <strong>Velocidad</strong>
+        <input type="number" className="bg-white text-black" 
+              value={speedFact} 
+              min={100} 
+              onChange={(e) => {
+              setSpeedFact(Number(e.target.value));
+            }}/>
+      </div>
       <div style={{ marginTop: "20px" }}>
         <button onClick={bubbleSort} disabled={sorting}>
           {sorting ? "Ordenando..." : "Iniciar Bubble Sort"}
