@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, {  useMemo, useState } from "react";
 import { motion } from "framer-motion";
 
 const initialArray = [5, 3, 8, 1, 2, 10,4, 20, 11];
 
+//Las barritas animadas
 const Bar: React.FC<{ value: number; highlighted: boolean }> = ({ value, highlighted }) => (
   <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
     {/* Número arriba */}
@@ -20,6 +21,7 @@ const Bar: React.FC<{ value: number; highlighted: boolean }> = ({ value, highlig
   </div>
 );
 
+//Aqui es para que se muevan las barras
 const Visualizer: React.FC<{ array: number[]; swapIndices: number[] }> = ({ array, swapIndices }) => (
   <div style={{ display: "flex", alignItems: "flex-end" }}>
     {array.map((val, i) => (
@@ -27,6 +29,32 @@ const Visualizer: React.FC<{ array: number[]; swapIndices: number[] }> = ({ arra
     ))}
   </div>
 );
+//Esto es para ver la dificultad, va contar cuanto se tarda en completar el algoritmo tecnicamente
+function contarInversiones(arr: number[]): number {
+  let contador = 0;
+  for (let i = 0; i < arr.length; i++) {
+    for (let j = i + 1; j < arr.length; j++) {
+      if (arr[i] > arr[j]) contador++;
+    }
+  }
+  return contador;
+}
+
+function calcularDificultad(arr: number[]) : {nivel: string; inversiones: number; maximo: number}{
+  const inversiones = contarInversiones(arr);
+  const n = arr.length;
+  const maximo = (n* (n-1)) /2;
+  const porcentaje = maximo === 0 ? 0 : inversiones / maximo;
+
+  let nivel: string;
+  if(porcentaje ===0) nivel = "Ya ordenado";
+  else if (porcentaje < 0.33) nivel = "Ta easy";
+  else if (porcentaje < 0.66) nivel = "Ta medio complicado";
+  else nivel = "Esta heavy";
+
+  return {nivel, inversiones, maximo}
+}
+
 
 export const BubleSortComponent: React.FC = () => {
   const [array, setArray] = useState<number[]>(initialArray);
@@ -34,16 +62,30 @@ export const BubleSortComponent: React.FC = () => {
   const [swapIndices, setSwapIndices] = useState<number[]>([]);
   const [nFact, setNFact] = useState(0);
   const [speedFact, setSpeedFact] = useState(100);
+  const dificultad = useMemo(() => calcularDificultad(array), [array]);
+  const [comparaciones, setComparaciones] = useState(0);
+const [swapsRealizados, setSwapsRealizados] = useState(0);
+// El bubble sort funcionando
 
   async function bubbleSort() {
     setSorting(true);
+    setComparaciones(0);
+    setSwapsRealizados(0);
     const copy = [...array];
+    let totalComparaciones = 0;
+    let totalSwaps = 0;
+
     for (let i = 0; i < copy.length; i++) { 
       for (let j = 0; j < copy.length - i - 1; j++) {
+        totalComparaciones++;
+        setComparaciones(totalComparaciones);
+
         if (copy[j] > copy[j + 1]) {
             setSwapIndices([j, j+1]);
           [copy[j], copy[j + 1]] = [copy[j + 1], copy[j]];
           setArray([...copy]);
+          totalSwaps++;
+          setSwapsRealizados(totalSwaps);
           await new Promise((res) => setTimeout(res, speedFact)); 
           setSwapIndices([]);
         }
@@ -52,17 +94,30 @@ export const BubleSortComponent: React.FC = () => {
     setSorting(false);
   }
 
+  //Esto crea otro array random por si no gusta el por defecto
   function resetArray() {
     setArray(Array.from({ length: 9 }, () => Math.floor(Math.random() * 20) + 1));
   }
+  //La funcion para agregar mas cosas al array XD
   function addArray(){
     setArray([...array, nFact])
     setNFact(0)
   }
-
+  //Ya el return funcionando
   return (
     <div style={{ textAlign: "center", marginTop: "40px" }} className="justify-center">
       <Visualizer array={array} swapIndices={swapIndices} />
+      <div style={{ marginTop: "16px" }}>
+          <p>
+            <strong>Dificultad:</strong> {dificultad.nivel}{" "}
+            <span style={{ color: "#777" }}>
+              ({dificultad.inversiones} de {dificultad.maximo} inversiones)
+            </span>
+          </p>
+          <p style={{ color: "#777", fontSize: 13 }}>
+            Comparaciones: {comparaciones} · Swaps: {swapsRealizados}
+          </p>
+      </div>
       <div>
         <input type="number" className="bg-white text-black" 
               value={nFact} 
