@@ -35,7 +35,7 @@ export const SelectionSortComponent: React.FC = () => {
   const [sorting, setSorting] = useState(false);
   const [swapIndices, setSwapIndices] = useState<number[]>([]);
   const [nFact, setNFact] = useState(0);
-  const [speedFact, setSpeedFact] = useState(100);
+  const [speedFact, setSpeedFact] = useState(600);
   const dificultad = useMemo(() => calcularDificultad(array), [array]);
   const [comparaciones, setComparaciones] = useState(0);
   const [swapsRealizados, setSwapsRealizados] = useState(0);

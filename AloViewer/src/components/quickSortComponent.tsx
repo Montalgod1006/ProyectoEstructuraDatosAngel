@@ -30,7 +30,7 @@ function calcularDificultad(arr: number[]) : {nivel: string; inversiones: number
 }
 
 
-export const InsertionSortComponent: React.FC = () => {
+export const QuickSortComponent: React.FC = () => {
   const [array, setArray] = useState<number[]>(initialArray);
   const [sorting, setSorting] = useState(false);
   const [swapIndices, setSwapIndices] = useState<number[]>([]);
@@ -41,7 +41,7 @@ export const InsertionSortComponent: React.FC = () => {
 const [swapsRealizados, setSwapsRealizados] = useState(0);
 // El bubble sort funcionando
 
-  async function insertionSort() {
+  async function quickSort() {
     setSorting(true);
     setComparaciones(0);
     setSwapsRealizados(0);
@@ -49,27 +49,46 @@ const [swapsRealizados, setSwapsRealizados] = useState(0);
     let totalComparaciones = 0;
     let totalSwaps = 0;
 
-    for (let i = 1; i < copy.length; i++) { 
-        let j = i;
-        while (j > 0) {
+    async function intercambiar(a: number, b: number){
+        setSwapIndices([a,b]);
+        [copy[a], copy[b]] = [copy[b], copy[a]];
+        setArray([...copy]);
+        totalSwaps++;
+        setSwapsRealizados(totalSwaps);
+        await new Promise((res)=> setTimeout(res, speedFact));
+        setSwapIndices([]);
+    }
+
+    async function partition(low: number, high: number): Promise<number>{
+        const pivote = copy[high];
+        let i = low -1;
+
+        for (let j = low; j < high; j++) {
             totalComparaciones++;
             setComparaciones(totalComparaciones);
 
-            if (copy[j-1] > copy[j]) {
-
-                setSwapIndices([j-1, j]);
-                [copy[j - 1], copy[j]] = [copy[j], copy[j - 1]];
-                setArray([...copy])
-                totalSwaps++;
-                setSwapsRealizados(totalSwaps);
-                await new Promise((res) => setTimeout(res, speedFact));
-                setSwapIndices([]);
-                j--;
-            } else{
-                break
+            if (copy[j]< pivote) {
+                i++;
+                if (i !== j) {
+                    await intercambiar(i,j);
+                }
             }
         }
+        if (i+1 !== high) {
+            await intercambiar(i+1, high)
+        }
+        return i + 1;
     }
+
+    async function quickSortHelper(low: number, high: number){
+        if (low < high) {
+            const posicionPivote = await partition(low, high);
+            // Todos estos await es para el seguimiento de las animaciones
+            await quickSortHelper(low, posicionPivote-1)
+            await quickSortHelper(posicionPivote +1, high);
+        }
+    }
+    await quickSortHelper(0, copy.length -1);
     setSorting(false);
   }
 
@@ -88,7 +107,7 @@ const [swapsRealizados, setSwapsRealizados] = useState(0);
   //Ya el return funcionando
   return (
     <div className="text-center mt-10" >
-        <strong className="text-2xl">INSERTION SORT</strong>
+        <strong className="text-2xl">QUICK SORT</strong>
       <Visualizer array={array} swapIndices={swapIndices} />
       <div className="mt-4">
           <p>
@@ -126,8 +145,8 @@ const [swapsRealizados, setSwapsRealizados] = useState(0);
             }}/>
       </div>
       <div className="mt-6 space-x-2">
-        <button onClick={insertionSort} disabled={sorting}>
-          {sorting ? "Ordenando..." : "Iniciar Insertion Sort"}
+        <button onClick={quickSort} disabled={sorting}>
+          {sorting ? "Ordenando..." : "Iniciar Quick Sort"}
         </button>
         <button onClick={resetArray} style={{ marginLeft: "10px" }} disabled={sorting}>
           Nuevo Array
