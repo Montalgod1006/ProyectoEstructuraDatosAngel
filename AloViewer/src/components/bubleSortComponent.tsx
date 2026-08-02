@@ -1,34 +1,13 @@
 import React, {  useMemo, useState } from "react";
-import { motion } from "framer-motion";
+import { Visualizer } from "../estructures/Visualizer";
 
 const initialArray = [5, 3, 8, 1, 2, 10,4, 20, 11];
 
 //Las barritas animadas
-const Bar: React.FC<{ value: number; highlighted: boolean }> = ({ value, highlighted }) => (
-  <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-    {/* Número arriba */}
-    <span style={{ marginBottom: "4px", fontWeight: "bold" }}>{value}</span>
-    {/* Barra animada */}
-    <motion.div
-      animate={{ height: value * 20, 
-        backgroundColor: highlighted ? "#ffb300" : "steelblue" }}
-      transition={{ duration: 0.5 }}
-      style={{
-        width: "40px",
-        margin: "4px"
-      }}
-    />
-  </div>
-);
+
 
 //Aqui es para que se muevan las barras
-const Visualizer: React.FC<{ array: number[]; swapIndices: number[] }> = ({ array, swapIndices }) => (
-  <div style={{ display: "flex", alignItems: "flex-end" }}>
-    {array.map((val, i) => (
-      <Bar key={i} value={val} highlighted={swapIndices.includes(i)} /> 
-    ))}
-  </div>
-);
+
 //Esto es para ver la dificultad, va contar cuanto se tarda en completar el algoritmo tecnicamente
 function contarInversiones(arr: number[]): number {
   let contador = 0;
@@ -105,21 +84,22 @@ const [swapsRealizados, setSwapsRealizados] = useState(0);
   }
   //Ya el return funcionando
   return (
-    <div style={{ textAlign: "center", marginTop: "40px" }} className="justify-center">
+    <div className="text-center mt-10" >
       <Visualizer array={array} swapIndices={swapIndices} />
-      <div style={{ marginTop: "16px" }}>
+      <div className="mt-4">
           <p>
             <strong>Dificultad:</strong> {dificultad.nivel}{" "}
-            <span style={{ color: "#777" }}>
+            <span className="text-white">
               ({dificultad.inversiones} de {dificultad.maximo} inversiones)
             </span>
           </p>
-          <p style={{ color: "#777", fontSize: 13 }}>
+          <p className="text-white text-sm">
             Comparaciones: {comparaciones} · Swaps: {swapsRealizados}
           </p>
       </div>
-      <div>
-        <input type="number" className="bg-white text-black" 
+      <div className="mt-4 space-x-2">
+        <input type="number" 
+              className="bg-white text-black border rounded px-2 py-1" 
               value={nFact} 
               min={0} 
               onChange={(e) => {
@@ -138,7 +118,7 @@ const [swapsRealizados, setSwapsRealizados] = useState(0);
               setSpeedFact(Number(e.target.value));
             }}/>
       </div>
-      <div style={{ marginTop: "20px" }}>
+      <div className="mt-6 space-x-2">
         <button onClick={bubbleSort} disabled={sorting}>
           {sorting ? "Ordenando..." : "Iniciar Bubble Sort"}
         </button>

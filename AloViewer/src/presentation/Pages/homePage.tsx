@@ -1,15 +1,11 @@
-import { useState } from 'react'
 import './homePage.css'
 import { Link } from 'react-router'
 
 export const HomePage = () => {
-  const [count, setCount] = useState(0)
   
 
   return (
     <div>
-    
-  
       <h1>AloViewer</h1>
       <div className='text-center columns-3'>
         <Link to={"/bubleSort"}>
@@ -26,9 +22,6 @@ export const HomePage = () => {
         </Link>
       </div>
       <div className="card text-center">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
         <p>
           {/* Aqui va algun texto */}
         </p>
