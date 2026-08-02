@@ -12,11 +12,11 @@ export const HomePage = () => {
             <img src={"/public/pwa-512x512.png"} className="logo w-40 h-40 center mx-auto" alt="AloViewer logo"  /> 
             <span className=" text-blue-500">Buble Sort</span>
         </Link>
-        <Link to={"/bubleSort"}>
+        <Link to={"/insertionSort"}>
             <img src={"/public/pwa-512x512.png"} className="logo w-40 h-40 center mx-auto" alt="AloViewer logo"  /> 
-            <span className=" text-blue-500">otro Sort</span>
+            <span className=" text-blue-500">Insertion Sort</span>
         </Link>
-        <Link to={"/bubleSort"}>
+        <Link to={"/selectionSort"}>
             <img src={"/public/pwa-512x512.png"} className="logo w-40 h-40 center mx-auto" alt="AloViewer logo"  /> 
             <span className=" text-blue-500">selection Sort</span>
         </Link>

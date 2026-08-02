@@ -3,12 +3,7 @@ import { Visualizer } from "../estructures/Visualizer";
 
 const initialArray = [5, 3, 8, 1, 2, 10,4, 20, 11];
 
-//Las barritas animadas
 
-
-//Aqui es para que se muevan las barras
-
-//Esto es para ver la dificultad, va contar cuanto se tarda en completar el algoritmo tecnicamente
 function contarInversiones(arr: number[]): number {
   let contador = 0;
   for (let i = 0; i < arr.length; i++) {
@@ -35,7 +30,7 @@ function calcularDificultad(arr: number[]) : {nivel: string; inversiones: number
 }
 
 
-export const BubleSortComponent: React.FC = () => {
+export const SelectionSortComponent: React.FC = () => {
   const [array, setArray] = useState<number[]>(initialArray);
   const [sorting, setSorting] = useState(false);
   const [swapIndices, setSwapIndices] = useState<number[]>([]);
@@ -43,10 +38,10 @@ export const BubleSortComponent: React.FC = () => {
   const [speedFact, setSpeedFact] = useState(100);
   const dificultad = useMemo(() => calcularDificultad(array), [array]);
   const [comparaciones, setComparaciones] = useState(0);
-const [swapsRealizados, setSwapsRealizados] = useState(0);
+  const [swapsRealizados, setSwapsRealizados] = useState(0);
 // El bubble sort funcionando
 
-  async function bubbleSort() {
+  async function selectionSort() {
     setSorting(true);
     setComparaciones(0);
     setSwapsRealizados(0);
@@ -54,33 +49,42 @@ const [swapsRealizados, setSwapsRealizados] = useState(0);
     let totalComparaciones = 0;
     let totalSwaps = 0;
 
-    for (let i = 0; i < copy.length; i++) { 
-      for (let j = 0; j < copy.length - i - 1; j++) {
-        totalComparaciones++;
-        setComparaciones(totalComparaciones);
+    const n = copy.length;
 
-        if (copy[j] > copy[j + 1]) {
-            setSwapIndices([j, j+1]);
-          [copy[j], copy[j + 1]] = [copy[j + 1], copy[j]];
-          setArray([...copy]);
-          totalSwaps++;
-          setSwapsRealizados(totalSwaps);
-          await new Promise((res) => setTimeout(res, speedFact)); 
-          setSwapIndices([]);
+    for (let i = 0; i < n - 1; i++) { 
+
+        let min = i;
+
+        for (let j = i+1; j < n; j++) {
+            totalComparaciones++;
+            setComparaciones(totalComparaciones);
+
+            if (copy[j] < copy[min]) {
+                min = j;
+            } 
         }
-      }
+        if (min !== i) {
+            setSwapIndices([i, min]);
+            [copy[i], copy[min]] = [copy[min], copy[i]];
+            setArray([...copy])
+            totalSwaps++;
+            setSwapsRealizados(totalSwaps);
+            await new Promise((res) => setTimeout(res, speedFact));
+            setSwapIndices([]);
+        }
+                
     }
     setSorting(false);
   }
 
-  //Esto crea otro array random por si no gusta el por defecto
+  
   function resetArray() {
     setArray(Array.from({ length: 9 }, () => Math.floor(Math.random() * 20) + 1));
   }
   function clearArray() {
   setArray([]); 
   }
-  //La funcion para agregar mas cosas al array XD
+
   function addArray(){
     setArray([...array, nFact])
     setNFact(0)
@@ -88,7 +92,7 @@ const [swapsRealizados, setSwapsRealizados] = useState(0);
   //Ya el return funcionando
   return (
     <div className="text-center mt-10" >
-      <strong className="text-2xl">BUBLE SORT</strong>
+        <strong className="text-2xl">SELECTION SORT</strong>
       <Visualizer array={array} swapIndices={swapIndices} />
       <div className="mt-4">
           <p>
@@ -126,8 +130,8 @@ const [swapsRealizados, setSwapsRealizados] = useState(0);
             }}/>
       </div>
       <div className="mt-6 space-x-2">
-        <button onClick={bubbleSort} disabled={sorting}>
-          {sorting ? "Ordenando..." : "Iniciar Bubble Sort"}
+        <button onClick={selectionSort} disabled={sorting}>
+          {sorting ? "Ordenando..." : "Iniciar Selection Sort"}
         </button>
         <button onClick={resetArray} style={{ marginLeft: "10px" }} disabled={sorting}>
           Nuevo Array
