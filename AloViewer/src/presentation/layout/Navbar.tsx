@@ -28,7 +28,9 @@ export const Navbar = () => {
         <div className="flex justify-between h-16">
           {/*Inicio de Logo y Titulo */}
           <div className="flex items-center">
-            <span className="font-bold text-xl">AloViewer</span>
+            <h1 className="font-bold text-xl">
+                  AloViewer
+            </h1>
           </div>
           {/* Fin Logo y Titulo */}
           {/*Inicio Navegación en escritorio */}
